@@ -2,6 +2,8 @@
 from imports import *
 import architectures
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 def train_model(model, data_loader, num_epochs=10, learning_rate=1e-4):
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.CrossEntropyLoss(ignore_index=alphabet.symb["PAD"])
@@ -55,12 +57,13 @@ def train_model(model, data_loader, num_epochs=10, learning_rate=1e-4):
 
         average_loss = total_loss / len(data_loader)
         print(f'Epoch {epoch + 1}/{num_epochs}, Loss: {average_loss:.4f}')
+        return model
 
 # Testing the model
 def test_model(model, data_loader, num_epochs=10, learning_rate=1e-4):
     model.eval()
     with torch.no_grad():
-        premises, conclusion, derivation_steps = generate_derivation(ipl_rules)
+        premises, conclusion, derivation_steps = derivations.generate_derivation(derivations.ipl_rules)
         if derivation_steps:
             input_tokens = []
             for premise in premises:
@@ -97,7 +100,7 @@ def test_model(model, data_loader, num_epochs=10, learning_rate=1e-4):
                         current_formula_tokens = []
                 elif tok == alphabet.symb["EOS"]:
                     if current_formula_tokens:
-                        formula = reconstruct_formula(current_formula_tokens)
+                        formula = utils.reconstruct_formula(current_formula_tokens)
                         predicted_formulas.append(formula)
                     break
                 else:
@@ -106,14 +109,14 @@ def test_model(model, data_loader, num_epochs=10, learning_rate=1e-4):
             # Print the premises and conclusion
             print("Premises and Conclusion:")
             for premise in premises:
-                print(f"Premise: {formula_to_string(premise)}")
-            print(f"Conclusion: {formula_to_string(conclusion)}")
+                print(f"Premise: {utils.formula_to_string(premise)}")
+            print(f"Conclusion: {utils.formula_to_string(conclusion)}")
 
             # Print the predicted derivation
             print("\nPredicted Derivation Steps:")
             for f in predicted_formulas:
                 if f:
-                    print(formula_to_string(f))
+                    print(utils.formula_to_string(f))
                 else:
                     print("Invalid formula")
 
