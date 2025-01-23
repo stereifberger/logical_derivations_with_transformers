@@ -2,7 +2,7 @@
 from imports import *
 
 # Number of propositional variables
-t_nu = 5  # Variables: p, q, r, s, t
+t_nu = 5  # Variables: p, q, r, s, t defined as numbers
 
 # Define numerical values for symbols
 symb = {
