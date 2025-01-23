@@ -2,6 +2,7 @@
 from imports import *
 import architectures
 import pickle
+import utils
 
 # Set device to CUDA if available, else use CPU
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
