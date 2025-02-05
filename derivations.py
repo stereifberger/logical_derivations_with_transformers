@@ -105,7 +105,7 @@ def get_applicable_rules(premises, rules):
     return applicable_rules
 
 # Function to generate a derivation with the given set of rules
-def generate_derivation(rules, max_steps=2):
+def generate_derivation(rules, max_steps=3):
     formulas = []
     derivation_steps = []
     # Start with initial formulas (premises)

@@ -1,5 +1,4 @@
 # Import necessary libraries and modules
-from imports import *
 import alphabet  # Import the alphabet module for symbolic representation
 
 # Function to convert a formula from tokens to a human-readable string 
@@ -67,12 +66,10 @@ def prepare_data(num_samples=1000):
                 input_tokens.extend(flatten_formula(premise))
             input_tokens.append(alphabet.symb["DE"])  # Separator before the conclusion
             input_tokens.extend(flatten_formula(conclusion))
-            input_tokens.append(alphabet.symb["EOS"])  # End of sequence token
 
             target_tokens = []  # To store tokens for target/derivation steps
             for step in derivation_steps:
                 target_tokens.extend(flatten_formula(step['conclusion']))
-            target_tokens.append(alphabet.symb["EOS"])  # End of sequence token
 
             # Add tuple of input and target tokens to the dataset
             data.append((input_tokens, target_tokens))
@@ -86,9 +83,7 @@ def prepare_data(num_samples=1000):
     padded_targets = []
     for input_seq, target_seq in data:
         # Pad input sequences with "PAD" token to max length
-        input_seq = input_seq + [alphabet.symb["PAD"]] * (max_input_len - len(input_seq))
         # Add a "Start of Sequence" token and pad target sequences
-        target_seq = [alphabet.symb["SOS"]] + target_seq + [alphabet.symb["PAD"]] * (max_target_len - len(target_seq))
         # Add the padded sequences to their respective lists
         padded_inputs.append(input_seq)
         padded_targets.append(target_seq)
