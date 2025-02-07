@@ -84,7 +84,9 @@ def prepare_data(num_samples=1000):
     padded_targets = []
     for input_seq, target_seq in data:
         # Pad input sequences with "PAD" token to max length
+        input_seq = input_seq + [alphabet.symb["PAD"]] * (max_input_len - len(input_seq))
         # Add a "Start of Sequence" token and pad target sequences
+        target_seq = target_seq + [alphabet.symb["PAD"]] * (max_target_len - len(target_seq))
         # Add the padded sequences to their respective lists
         padded_inputs.append(input_seq)
         padded_targets.append(target_seq)
