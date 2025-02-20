@@ -1,13 +1,11 @@
 from imports import * # Import libraries
 outp_dict = {}
 
-def create_dataset(iterations = list, calculus = list):
+def create_dataset(iterations = list, calculus = list, number = int):
     prem = gen_prem() # Generate random premises
     drvas = generate_derivations(iterations = iterations, calculus = calculus, prem = prem) # Generate all derivations from premises up to max_iterations in length using "calculus"
-    sample_conclusions = get_conclusions(premises = prem, # Get sample conclusions
-                                         max_iterations = iterations[1],
-                                         calculus = calculus)
-    drvas = [l for l in tqdm(drvas, desc =  "Checked derivations for sample conclusions") if l[-1] in sample_conclusions] # Filter out derivations with sample conclusions
+    pairs = get_conclusions(derivations = drvas, number = number)
+    drvas = [l for l in drvas if l[:2]+[l[-1]] in pairs] # Filter out derivations with sample conclusions
     max_y_train = torch.tensor(util.lflt(max(drvas, key=len))) 
 
     inpt, y_train_ordered, max_y_train_len = gen_optimized(drvas) # Generate onehot encoded input dataset "inpt", output dataset "y_train_ordered" and get maximum length of derivations in y as number
@@ -27,40 +25,17 @@ def create_dataset(iterations = list, calculus = list):
     print(f"Average number ground truth examples/x_train example: {len(drvas)/len(y_train_ordered)}")
     return inpt_2d, inpt_3d, y_train_ordered, max_y_train_len # Return the two and three dimensional input dataset, the output datset and the maximum length of derivations in the latter
 
-def get_conclusions(premises, max_iterations, calculus):
-    drvas = [] # Define list of derivations
-    
-    # This first part is for the first iteration of rule application to only the premises
-    for prem in premises: # Iteration over all premises in the list of premis pairs
-        subsets = util.subsets_with_length(prem, 1) + util.subsets_with_length(prem, 2) # Generate all subsets of length 1 and 2 of the premise pairs
-        for i in subsets: # Iterate over these (effectivly both single premises and the premise pair)
-            for rule in calculus: # Iterate over all rules in the calculus
-                if calculi.check(rule, i): # Check whether a rule is applicable to a given subset
-                    new = i + [rule(i)] # If it is applicable apply the rule to it
-                    drvas.append(new) # Append the result to the list of derivations
-
-    # This second part is for the rest of the iterations
-    iterations = 2 # Because rules have been applied once above the iteration counter is set to 2
-    prev = 0
-    while iterations <= max_iterations: # While the iterations have not exceeded the maximum number set:
-        sub_drvas = drvas[prev:]
-        prev = len(drvas)
-        for drva in tqdm(sub_drvas, desc = f"Processed premises for sample conclusions at iteration {iterations}"): # Iterate over all derivations at current iteration with progress bar indicating processed derivations
-            subsets = util.subsets_with_length(drva, 1) + util.subsets_with_length(drva, 2) # The rest of the for loop is the same as in the first part
-            subsets = sample(subsets, int(round(len(subsets)/(iterations)))) # Except here: The higher the number of iterations the more derivations are filtered out to keep the dataset small.
-            # For given premis-conclusion pairs not all derivations are therefore in the resulting dataset. But this function only produces the sample conclusions, so this is no problem.
-            for i in subsets:
-                cand = []
-                for rule in calculus:
-                    if calculi.check(rule, i):
-                        cand.append(rule(i))
-            new = drva + [choice(cand)] # Only append one of the derived formulas to the previous conclusions to reduce the number of derived conclusions
-            drvas.append(new)
-        iterations += 1
-    conclusions = [x[-1] for x in drvas] # Get only the conclusions as last list elements
-    conclusions_proxy = []
-    conclusions = [conclusions_proxy.append(x) for x in conclusions if x not in conclusions_proxy] # Create a list by list comprehension of only unique conclusions
-    return conclusions_proxy
+def get_conclusions(derivations, number):
+    pairs = []
+    shuffle(derivations)
+    i = 0
+    while len(pairs) < number:
+        pair = derivations[i][:2] + [derivations[i][-1]]
+        print(pair)
+        if pair not in pairs:
+            pairs.append(pair)
+        i+=1
+    return pairs
 
 def generate_derivations(iterations = list, calculus = list, prem = list):
     iter = 1
