@@ -1,0 +1,6 @@
+# Endnote
+- 1 GPT-4. Description: A train-test split for pytorch. 2024-04-08. https://platform.openai.com/playground.
+- 2: Ashwin Prasad. PyTorch For Deep Learning — Feed Forward Neural Network. 11.09.2020. https://medium.com/analytics-vidhya/pytorch-for-deep-learning-feed-forward-neural-network-d24f5870c18.
+- 3: Ashwin Prasad. PyTorch For Deep Learning — Feed Forward Neural Network. 11.09.2020. https://medium.com/analytics-vidhya/pytorch-for-deep-learning-feed-forward-neural-network-d24f5870c18. I changed the implementation for the other network types following their definition in architectures.py.
+- 4: Ashwin Prasad. PyTorch For Deep Learning — Feed Forward Neural Network. 11.09.2020. https://medium.com/analytics-vidhya/pytorch-for-deep-learning-feed-forward-neural-network-d24f5870c18.
+- 5: Ashwin Prasad. PyTorch For Deep Learning — Feed Forward Neural Network. 11.09.2020. https://medium.com/analytics-vidhya/pytorch-for-deep-learning-feed-forward-neural-network-d24f5870c18. Added the train-evaluation split of the method based on suggestion by GPT-4. (GPT-4. Description: A train-test-split for pytorch. 2024-04-08. https://platform.openai.com/playground).
