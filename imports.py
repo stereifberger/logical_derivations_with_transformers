@@ -22,7 +22,7 @@ import numpy as np
 from numpy import argmax
 
 # Other libraries
-from tqdm.notebook import tqdm
+from tqdm import tqdm  # Auto-detects best display mode
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
@@ -45,3 +45,4 @@ from IPython.utils import io
 import json
 from matplotlib import font_manager as fm
 from torch.nn.functional import pairwise_distance
+import sys

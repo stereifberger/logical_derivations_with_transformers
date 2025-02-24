@@ -29,9 +29,7 @@ class Decoder_LSTM(nn.Module):
 
     def forward(self, input):
         output, (hidden, cell) = self.rnn(input)  # Forward pass through RNN
-        #print(f"OUTPUT:{output.shape}")
         prediction = self.fc_out(output)  # Predict next token
-        #print(f"PREDICTION:{prediction.shape}")
         return prediction
 
 # Seq2Seq Model Integration
@@ -45,19 +43,10 @@ class Seq2Seq(nn.Module):
     def forward(self, src, trg_len):
         trg_len = trg_len 
         hidden = self.encoder(src)  # Initial hidden state from encoder.
-
         # get top layer hidden states
         last_layer_hidden = hidden[-1] # [batch_size, dim]
-        #print(f"LAST LAYER HIDDEN: {last_layer_hidden.shape}")
-
-        # copy
-        #print(last_layer_hidden.shape)
-
         dec_input = last_layer_hidden.unsqueeze(1).expand(-1, trg_len, -1)
-        #print(f"DEC_INPUT: {dec_input.shape}")
-        # dec_input : [batch_size, target_length, dim]
         output = self.decoder(dec_input)
-
         return output  # [batch_size, target_length, num_output_label]
 
 """
