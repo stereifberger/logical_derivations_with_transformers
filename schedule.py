@@ -25,9 +25,9 @@ def train_model(model, dataloader_train, dataloader_test, optimizer, criterion, 
 
             y_pred = model(x_train[:,1:], max_y_length)               # Get the model's output for batch
             if y_train.dim() == 3:
-                loss, y_train_collected = losses.mse_loss_ffn(y_pred, x_train, y_train, max_y_length, device) # Calculate loss
+                loss, y_train_collected = losses.ffn_loss_schedule(y_pred, x_train, y_train, max_y_length, device) # Calculate loss
             else:
-                loss, y_train_collected  = losses.mse_loss(y_pred, x_train, y_train, max_y_length, device) # Calculate loss
+                loss, y_train_collected  = losses.loss_schedule(y_pred, x_train, y_train, max_y_length, device) # Calculate loss
             epoch_loss.append(loss.item())
             loss.backward()  #  Perform backpropagation
             optimizer.step() #  Run optimizer
@@ -57,9 +57,9 @@ def train_model(model, dataloader_train, dataloader_test, optimizer, criterion, 
                 x_test = x_test.to(device)
                 y_pred = model(x_test[:, 1:], max_y_length)
                 if y_train.dim() == 3:
-                    loss, y_test_collected  = losses.mse_loss_ffn(y_pred, x_test, y_train, max_y_length, device) # Calculate loss
+                    loss, y_test_collected  = losses.ffn_loss_schedule(y_pred, x_test, y_train, max_y_length, device) # Calculate loss
                 else:
-                    loss, y_test_collected  = losses.mse_loss(y_pred, x_test, y_train, max_y_length, device) # Calculate loss
+                    loss, y_test_collected  = losses.loss_schedule(y_pred, x_test, y_train, max_y_length, device) # Calculate loss
                 test_loss.append(loss.item())
 
         t_loss = statistics.mean(test_loss) 
