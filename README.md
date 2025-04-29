@@ -1,4 +1,3 @@
-# master-s-thesis
 A framework for testing deep learning architectures on logical consequence. To run experiments use implementation.ipynb.
 
 # Installation of Dependencies
